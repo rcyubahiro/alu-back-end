@@ -1,33 +1,29 @@
 #!/usr/bin/python3
-"""Fetches and displays TODO list progress of an employee using REST API"""
+"""Module"""
 
 import requests
 import sys
 
 
-def fetch_employee_todos(employee_id):
-        """Fetch employee name and tasks from the JSONPlaceholder API"""
-            base_url = 'https://jsonplaceholder.typicode.com'
-                user_url = f'{base_url}/users/{employee_id}'
-                    todos_url = f'{base_url}/todos?userId={employee_id}'
+"""Module"""
 
-                        user_response = requests.get(user_url)
-                            todos_response = requests.get(todos_url)
+if __name__ == '__main__':
+        user_id = sys.argv[1]
+            user_url = "https://jsonplaceholder.typicode.com/users/{}" \
+                            .format(user_id)
+                                todos_url = "https://jsonplaceholder.typicode.com/users/{}/todos/" \
+                                                .format(user_id)
 
-                                employee_name = user_response.json().get('name')
-                                    todos = todos_response.json()
+                                                    user_info = requests.request('GET', user_url).json()
+                                                        todos_info = requests.request('GET', todos_url).json()
 
-                                        total_tasks = len(todos)
-                                            done_tasks = [task for task in todos if task.get('completed')]
+                                                            employee_name = user_info["name"]
+                                                                task_completed = list(filter(lambda obj:
+                                                                                                     (obj["completed"] is True), todos_info))
+                                                                    number_of_done_tasks = len(task_completed)
+                                                                        total_number_of_tasks = len(todos_info)
 
-                                                print(f"Employee {employee_name} is done with tasks({len(done_tasks)}/{total_tasks}):")
-                                                    for task in done_tasks:
-                                                                print(f"\t {task.get('title')}")
+                                                                            print("Employee {} is done with tasks({}/{}):".
+                                                                                              format(employee_name, number_of_done_tasks, total_number_of_tasks))
 
-
-                                                                if __name__ == "__main__":
-                                                                        if len(sys.argv) != 2:
-                                                                                    print("Usage: python3 0-gather_data_from_an_API.py <employee_id>")
-                                                                                            sys.exit(1)
-                                                                                                employee_id = int(sys.argv[1])
-                                                                                                    fetch_employee_todos(employee_id)
+                                                                                [print("\t " + task["title"]) for task in task_completed]

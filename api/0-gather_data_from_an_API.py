@@ -8,10 +8,12 @@ if __name__ == "__main__":
     employee_id = int(sys.argv[1])
 
     user_url = (
-        "https://jsonplaceholder.typicode.com/users/{}".format(employee_id)
+        "https://jsonplaceholder.typicode.com/users/"
+        "{}".format(employee_id)
     )
     todos_url = (
-        "https://jsonplaceholder.typicode.com/todos?userId={}".format(employee_id)
+        "https://jsonplaceholder.typicode.com/todos?"
+        "userId={}".format(employee_id)
     )
 
     user_response = requests.get(user_url)
@@ -31,4 +33,3 @@ if __name__ == "__main__":
     )
     for task in done_tasks:
         print("\t {}".format(task.get("title")))
-
